@@ -64,7 +64,7 @@ def getPrompt(extracted_text, type):
     
     Important considerations:
     * only generate extracted data json.
-    * Enclose property names in double quotes
+    * Enclose property names in double quotes.
     * The provided format should be strictly followed.
     * Do not generate any additional information other than the schema provided
     * If the value requested is missing, Default value based on datatype (eg: empty string for string type) must be provided
