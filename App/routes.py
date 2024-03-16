@@ -232,7 +232,7 @@ def extract_data(text, category):
 
 main = Blueprint('main', __name__)
 
-@main.route('/extract_invoice_text', methods=['POST'])
+@main.route('/extract_text', methods=['POST'])
 def extract_data_for_NER():
     data = request.get_json()
     if 'text' not in data:
