@@ -153,39 +153,6 @@ def submit_url():
     except:
        return jsonify({'message': "error"}), 500
 
-@app.route("/search",methods = ['POST'] )   
-def get_response():
-    data = request.get_json()
-    if 'user_id' not in data or 'message' not in data:
-        return jsonify({'error': 'user_id and url are required'}), 400
-    user_id = data['user_id']
-    message = data['message']
-    encoded_queries = encode_query(message,embedder)
-    query = (
-    Query('(*)=>[KNN 3 @vector $query_vector AS vector_score]')
-     .sort_by('vector_score')
-     .return_fields('vector_score', 'description')
-     .dialect(2)
-)
-    similarity_search = client.ft(user_id).search(query,{"query_vector": np.array(encoded_queries, dtype=np.float32).tobytes()}).docs
-    model_context = ""
-    for i in similarity_search:
-      model_context += i.description
-    if user_id not in client.execute_command('FT._LIST'):
-       return jsonify({'message': "No vector index found"}), 500
-    prompt = f"""You are a smart assistant that answers user questions based on the context provided
-
-user_query: {message}
-
-Answer based on the following context:
-
-data: {model_context}
-
-If the context provided does not answer user query, you can answer outside the context but you have to warn user about it
-
-"""
-    completion = askLLM(prompt)
-    return jsonify({'completion': completion})
 
 @app.route("/refresh",methods=["GET"])
 def refresh():
