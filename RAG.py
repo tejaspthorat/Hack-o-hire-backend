@@ -22,10 +22,6 @@ from sentence_transformers import SentenceTransformer
 from langchain_community.document_loaders import TextLoader
 import os
 
-import fireworks.client
-
-# url = "https://didulglohplnliryyzns.supabase.co/storage/v1/object/sign/pdf/88e3bac4-13e3-4d29-9962-57fe95758329/2307.06435.pdf?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwZGYvODhlM2JhYzQtMTNlMy00ZDI5LTk5NjItNTdmZTk1NzU4MzI5LzIzMDcuMDY0MzUucGRmIiwiaWF0IjoxNzA5Mjk1NTYxLCJleHAiOjE3MDk5MDAzNjF9.r1_x3GJbm6k43dG1Y8PeziSjc44X6YO6pWKC4j0MMAY&t=2024-03-01T12%3A19%3A21.520Z"
-fireworks.client.api_key = "iaMTlSAgZeJnVAGOzKURAkw5Ux6NweLIrRxdBT80eycdcqXt"
 
 def str_to_doc(name):
    folder_name = 'docs'
@@ -57,23 +53,9 @@ def extract_text(url):
   
   return docs
 
-def askLLM(prompt):
-    completion = fireworks.client.ChatCompletion.create(
-    model="accounts/fireworks/models/mixtral-8x7b-instruct",
-    messages=[
-      {
-        "role": "user",
-        "content": prompt,
-      }
-    ],
-    n=1,
-    max_tokens=4000,
-    temperature=0.1,
-    top_p=0.9,
-   )
-    return completion.choices[0].message.content
 
 client = redis.Redis(host="redis-19988.c251.east-us-mz.azure.cloud.redislabs.com", port=19988, decode_responses=True, password = "OSzz3Wb89vOVsTceZZWyYPMXMVY1stgB")
+
 def cache_to_redis(client,docs,user_id):
   pipeline = client.pipeline()
   for i, description in enumerate(docs, start=1):
